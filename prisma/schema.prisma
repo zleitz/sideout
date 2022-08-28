@@ -65,9 +65,17 @@ model VerificationToken {
 }
 
 model Tournament {
-    id          String   @id @default(cuid())
-    createdAt   DateTime @default(now())
+    id        String   @id @default(cuid())
+    createdAt DateTime @default(now())
+
     name        String
-    organizer   User?    @relation(fields: [organizerId], references: [id])
+    organizer   User?   @relation(fields: [organizerId], references: [id])
     organizerId String?
+}
+
+model Competitor {
+    id String @id @default(cuid())
+    createdAt DateTime @default(now())
+
+    
 }
