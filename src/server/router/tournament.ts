@@ -45,6 +45,15 @@ export const tournamentRouter = createRouter()
       }
     },
   })
+  .mutation("enterTournament", {
+    async resolve({ ctx }) {
+      try {
+        await ctx.prisma.tournament.update({
+          
+        })
+      }
+    },
+  })
   .query("getAuthedUserTournaments", {
     async resolve({ ctx }) {
       try {
