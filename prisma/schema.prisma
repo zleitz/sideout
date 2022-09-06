@@ -69,23 +69,28 @@ model Tournament {
     id        String   @id @default(cuid())
     createdAt DateTime @default(now())
 
-    startDate      DateTime
-    endDate        DateTime
-    tournamentName String
-    location       String
-    organizer      User?    @relation("TournamentsRan", fields: [organizerId], references: [id])
-    organizerId    String?
+    startDate                 DateTime
+    endDate                   DateTime
+    tournamentName            String
+    location                  String
+    organizer                 User?                       @relation("TournamentsRan", fields: [organizerId], references: [id])
+    organizerId               String?
+    numberOfRounds            Int
+    surfaceType               SurfaceType                 @relation(fields: [surfaceTypeId], references: [id])
+    surfaceTypeId             String                      @unique
+    TournamentPlayingCategory TournamentPlayingCategory[]
 }
 
 model Player {
     id        String   @id @default(cuid())
     createdAt DateTime @default(now())
 
-    firstName   String
-    lastName    String
-    gender      String   @db.Char(1)
-    dateOfBirth DateTime
-    hometown    String
+    firstName    String
+    lastName     String
+    gender       String         @db.Char(1)
+    dateOfBirth  DateTime
+    hometown     String
+    Registration Registration[]
 }
 
 model Team {
@@ -95,4 +100,57 @@ model Team {
     name      String
     captain   User   @relation(fields: [captainId], references: [id])
     captainId String
+}
+
+model SurfaceType {
+    id          String      @id @default(cuid())
+    surfaceType String      @db.VarChar(50)
+    Tournament  Tournament?
+}
+
+model PlayingCategory {
+    id                        String                     @id @default(cuid())
+    categoryName              String                     @db.VarChar(50)
+    TournamentPlayingCategory TournamentPlayingCategory?
+}
+
+model TournamentPlayingCategory {
+    id                String          @id @default(cuid())
+    tournament        Tournament      @relation(fields: [tournamentId], references: [id])
+    tournamentId      String
+    playingCategory   PlayingCategory @relation(fields: [playingCategoryId], references: [id])
+    playingCategoryId String          @unique
+    Fixture           Fixture[]
+}
+
+model PlayingIn {
+    id             String       @id @default(cuid())
+    registration   Registration @relation(fields: [registrationId], references: [id])
+    registrationId String
+    seed           Int
+}
+
+model Registration {
+    id               String      @id @default(cuid())
+    player           Player      @relation(fields: [playerId], references: [id])
+    playerId         String
+    registrationDate DateTime    @default(now())
+    PlayingIn        PlayingIn[]
+}
+
+model Fixture {
+    id                          String                    @id @default(cuid())
+    tournamentPlayingCategory   TournamentPlayingCategory @relation(fields: [tournamentPlayingCategoryId], references: [id])
+    tournamentPlayingCategoryId String
+    round                       Int
+    // firstRegistration           Registration              @relation("firstRegistration", fields: [firstRegistrationId], references: [id])
+    // firstRegistrationId         String
+    // secondRegistration Registration @relation("secondRegistration", fields: [secondRegistrationId], references: [id])
+    // secondRegistrationId String
+    FixtureResult               FixtureResult[]
+}
+
+model FixtureResult {
+    fixture   Fixture @relation(fields: [fixtureId], references: [id])
+    fixtureId String  @id
 }
