@@ -79,6 +79,15 @@ model Tournament {
     surfaceType               SurfaceType                 @relation(fields: [surfaceTypeId], references: [id])
     surfaceTypeId             String                      @unique
     TournamentPlayingCategory TournamentPlayingCategory[]
+    tournamentType            TournamentType              @relation(references: [id], fields: [tournamentTypeId])
+    tournamentTypeId          String
+}
+
+model TournamentType {
+    id String @id @default(cuid())
+
+    tournamentType String       @db.VarChar(30)
+    Tournament     Tournament[]
 }
 
 model Player {

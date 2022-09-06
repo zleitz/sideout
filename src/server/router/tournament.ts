@@ -36,21 +36,12 @@ export const tournamentRouter = createRouter()
       try {
         await ctx.prisma.tournament.create({
           data: {
-            name: input.name,
+            tournamentName: input.name,
             organizerId: ctx.session?.user?.id,
           },
         });
       } catch (error) {
         console.log(error);
-      }
-    },
-  })
-  .mutation("enterTournament", {
-    async resolve({ ctx }) {
-      try {
-        await ctx.prisma.tournament.update({
-          
-        })
       }
     },
   })
