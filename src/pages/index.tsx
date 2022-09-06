@@ -103,8 +103,8 @@ const Tournaments = () => {
       {tournaments?.map((t, index) => {
         return (
           <div key={index}>
-            <span>{t.name}</span>
-            <p>Organized by {t.organizer?.name}</p>
+            <span>{t.tournamentName}</span>
+            <p>Located in {t.organizer?.name}</p>
           </div>
         );
       })}
@@ -113,7 +113,7 @@ const Tournaments = () => {
         {userTournaments?.map((t, index) => {
           return (
             <div key={index}>
-              <span>{t.name}</span>
+              <span>{t.tournamentName}</span>
             </div>
           );
         })}

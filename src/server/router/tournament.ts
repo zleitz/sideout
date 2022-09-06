@@ -8,7 +8,7 @@ export const tournamentRouter = createRouter()
       try {
         return await ctx.prisma.tournament.findMany({
           select: {
-            name: true,
+            tournamentName: true,
             organizer: true,
           },
           orderBy: {
@@ -38,6 +38,12 @@ export const tournamentRouter = createRouter()
           data: {
             tournamentName: input.name,
             organizerId: ctx.session?.user?.id,
+            startDate: new Date("1/1/1"),
+            endDate: new Date("1/2/1"),
+            location: "Pensacola, FL",
+            surfaceTypeId: "5",
+            tournamentTypeId: "3",
+            numberOfRounds: 2,
           },
         });
       } catch (error) {
