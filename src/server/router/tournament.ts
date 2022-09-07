@@ -52,6 +52,7 @@ export const tournamentRouter = createRouter()
       location: z.string(),
       surfaceType: z.string(),
       tournamentType: z.string(),
+      numberOfRounds: z.number(),
     }),
     async resolve({ ctx, input }) {
       try {
@@ -64,7 +65,7 @@ export const tournamentRouter = createRouter()
             location: "Pensacola, FL",
             surfaceTypeId: input.surfaceType,
             tournamentTypeId: input.tournamentType,
-            numberOfRounds: 2,
+            numberOfRounds: input.numberOfRounds,
           },
         });
       } catch (error) {

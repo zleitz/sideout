@@ -30,6 +30,7 @@ const Home: NextPage = () => {
   });
   const [tournamentName, setTournamentName] = useState("");
   const [location, setLocation] = useState("");
+  const [rounds, setRounds] = useState("");
   const {
     select: surfaceSelect,
     handleSelectChange: handleSurfaceSelectChange,
@@ -74,6 +75,7 @@ const Home: NextPage = () => {
                     location,
                     surfaceType: surfaceSelect,
                     tournamentType: tournamentTypeSelect,
+                    numberOfRounds: Number(rounds),
                   });
 
                   setTournamentName("");
@@ -119,6 +121,14 @@ const Home: NextPage = () => {
                     );
                   })}
                 </select>
+                <input
+                  type="number"
+                  max={5}
+                  value={rounds}
+                  onChange={(event) => {
+                    setRounds(event.target.value);
+                  }}
+                />
 
                 <button
                   type="submit"
