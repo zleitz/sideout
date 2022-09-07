@@ -3,10 +3,18 @@ import Head from "next/head";
 import { trpc } from "../utils/trpc";
 import { signIn, useSession, signOut } from "next-auth/react";
 import { useState } from "react";
+import { useSelect } from "../hooks/useSelect";
 
 const Home: NextPage = () => {
   const { data: session, status } = useSession();
   const ctx = trpc.useContext();
+  const { data: surfaceTypes } = trpc.useQuery([
+    "tournament.getTournamentSurfaceTypes",
+  ]);
+  const { data: tournamentTypes } = trpc.useQuery([
+    "tournament.getTournamentTypes",
+  ]);
+
   const createTournament = trpc.useMutation("tournament.createTournament", {
     onMutate: () => {
       ctx.cancelQuery(["tournament.getAll"]);
@@ -21,6 +29,15 @@ const Home: NextPage = () => {
     },
   });
   const [tournamentName, setTournamentName] = useState("");
+  const [location, setLocation] = useState("");
+  const {
+    select: surfaceSelect,
+    handleSelectChange: handleSurfaceSelectChange,
+  } = useSelect("");
+  const {
+    select: tournamentTypeSelect,
+    handleSelectChange: handleTournamentTypeSelectChange,
+  } = useSelect("");
 
   if (status === "loading") {
     return <main>Loading...</main>;
@@ -53,7 +70,10 @@ const Home: NextPage = () => {
                   event.preventDefault();
 
                   createTournament.mutate({
-                    name: tournamentName,
+                    tournamentName,
+                    location,
+                    surfaceType: surfaceSelect,
+                    tournamentType: tournamentTypeSelect,
                   });
 
                   setTournamentName("");
@@ -62,11 +82,44 @@ const Home: NextPage = () => {
                 <input
                   type="text"
                   value={tournamentName}
-                  placeholder="Your message..."
+                  placeholder="Tournament Name"
                   maxLength={100}
                   onChange={(event) => setTournamentName(event.target.value)}
                   className="px-4 py-2 rounded-md border-2 border-zinc-800 bg-neutral-900 focus:outline-none"
                 />
+                <input
+                  type="text"
+                  value={location}
+                  placeholder="Location"
+                  maxLength={100}
+                  onChange={(event) => setLocation(event.target.value)}
+                  className="px-4 py-2 rounded-md border-2 border-zinc-800 bg-neutral-900 focus:outline-none"
+                />
+                <select
+                  value={surfaceSelect}
+                  onChange={handleSurfaceSelectChange}
+                >
+                  {surfaceTypes?.map((type) => {
+                    return (
+                      <option key={type.id} value={type.id}>
+                        {type.surfaceType}
+                      </option>
+                    );
+                  })}
+                </select>
+                <select
+                  value={tournamentTypeSelect}
+                  onChange={handleTournamentTypeSelectChange}
+                >
+                  {tournamentTypes?.map((type) => {
+                    return (
+                      <option key={type.id} value={type.id}>
+                        {type.tournamentType}
+                      </option>
+                    );
+                  })}
+                </select>
+
                 <button
                   type="submit"
                   className="p-2 rounded-md border-2 border-zinc-800 focus:outline-none"

@@ -20,6 +20,24 @@ export const tournamentRouter = createRouter()
       }
     },
   })
+  .query("getTournamentSurfaceTypes", {
+    async resolve({ ctx }) {
+      try {
+        return await ctx.prisma.surfaceType.findMany();
+      } catch (error) {
+        console.log(error);
+      }
+    },
+  })
+  .query("getTournamentTypes", {
+    async resolve({ ctx }) {
+      try {
+        return await ctx.prisma.tournamentType.findMany();
+      } catch (error) {
+        console.log(error);
+      }
+    },
+  })
   .middleware(async ({ ctx, next }) => {
     // Any queries or mutations after this middleware will
     // raise an error unless there is a current session
@@ -30,19 +48,22 @@ export const tournamentRouter = createRouter()
   })
   .mutation("createTournament", {
     input: z.object({
-      name: z.string(),
+      tournamentName: z.string(),
+      location: z.string(),
+      surfaceType: z.string(),
+      tournamentType: z.string(),
     }),
     async resolve({ ctx, input }) {
       try {
         await ctx.prisma.tournament.create({
           data: {
-            tournamentName: input.name,
+            tournamentName: input.tournamentName,
             organizerId: ctx.session?.user?.id,
             startDate: new Date("1/1/1"),
             endDate: new Date("1/2/1"),
             location: "Pensacola, FL",
-            surfaceTypeId: "5",
-            tournamentTypeId: "3",
+            surfaceTypeId: input.surfaceType,
+            tournamentTypeId: input.tournamentType,
             numberOfRounds: 2,
           },
         });
