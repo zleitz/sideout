@@ -69,18 +69,18 @@ model Tournament {
     id        String   @id @default(cuid())
     createdAt DateTime @default(now())
 
-    startDate                 DateTime
-    endDate                   DateTime
-    tournamentName            String
-    location                  String
-    organizer                 User?                       @relation("TournamentsRan", fields: [organizerId], references: [id])
-    organizerId               String?
-    numberOfRounds            Int
-    surfaceType               SurfaceType                 @relation(fields: [surfaceTypeId], references: [id])
-    surfaceTypeId             String                      @unique
-    TournamentPlayingCategory TournamentPlayingCategory[]
-    tournamentType            TournamentType              @relation(references: [id], fields: [tournamentTypeId])
-    tournamentTypeId          String
+    startDate         DateTime
+    endDate           DateTime
+    tournamentName    String
+    location          String
+    organizer         User?                       @relation("TournamentsRan", fields: [organizerId], references: [id])
+    organizerId       String?
+    numberOfRounds    Int
+    surfaceType       SurfaceType                 @relation(fields: [surfaceTypeId], references: [id])
+    surfaceTypeId     String
+    playingCategories TournamentPlayingCategory[]
+    tournamentType    TournamentType              @relation(references: [id], fields: [tournamentTypeId])
+    tournamentTypeId  String
 }
 
 model TournamentType {
@@ -112,9 +112,9 @@ model Team {
 }
 
 model SurfaceType {
-    id          String      @id @default(cuid())
-    surfaceType String      @db.VarChar(50)
-    Tournament  Tournament?
+    id          String       @id @default(cuid())
+    surfaceType String       @db.VarChar(50)
+    Tournament  Tournament[]
 }
 
 model PlayingCategory {

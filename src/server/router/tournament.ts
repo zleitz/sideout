@@ -10,9 +10,24 @@ export const tournamentRouter = createRouter()
           select: {
             tournamentName: true,
             organizer: true,
+            id: true,
           },
           orderBy: {
             createdAt: "desc",
+          },
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    },
+  })
+  .query("getTournamentById", {
+    input: z.object({ id: z.string() }),
+    async resolve({ ctx, input }) {
+      try {
+        return await ctx.prisma.tournament.findUnique({
+          where: {
+            id: input.id,
           },
         });
       } catch (error) {

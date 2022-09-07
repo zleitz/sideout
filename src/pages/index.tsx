@@ -4,6 +4,7 @@ import { trpc } from "../utils/trpc";
 import { signIn, useSession, signOut } from "next-auth/react";
 import { useState } from "react";
 import { useSelect } from "../hooks/useSelect";
+import Link from "next/link";
 
 const Home: NextPage = () => {
   const { data: session, status } = useSession();
@@ -165,19 +166,18 @@ const Tournaments = () => {
     <div className="flex flex-col gap-4">
       {tournaments?.map((t, index) => {
         return (
-          <div key={index}>
-            <span>{t.tournamentName}</span>
-            <p>Located in {t.organizer?.name}</p>
-          </div>
+          <Link href={`/tournament/${t.id}`} key={index}>
+            <a>{t.tournamentName}</a>
+          </Link>
         );
       })}
       <div>
         THESE ARE TOURNAMENTS YOU HAVE / ARE RUNNING
         {userTournaments?.map((t, index) => {
           return (
-            <div key={index}>
-              <span>{t.tournamentName}</span>
-            </div>
+            <Link href={`/tournament/${t.id}`} key={index}>
+              <a>{t.tournamentName}</a>
+            </Link>
           );
         })}
       </div>
