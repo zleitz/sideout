@@ -2,9 +2,9 @@ import type { NextPage } from "next";
 import Head from "next/head";
 import { trpc } from "../utils/trpc";
 import { signIn, useSession, signOut } from "next-auth/react";
-import { useState } from "react";
 import { useSelect } from "../hooks/useSelect";
 import Link from "next/link";
+import useInput from "../hooks/useInput";
 
 const Home: NextPage = () => {
   const { data: session, status } = useSession();
@@ -29,9 +29,21 @@ const Home: NextPage = () => {
       ctx.invalidateQueries(["tournament.getAll"]);
     },
   });
-  const [tournamentName, setTournamentName] = useState("");
-  const [location, setLocation] = useState("");
-  const [rounds, setRounds] = useState("");
+  const {
+    state: tournamentName,
+    handleChange: handleTournamentNameChange,
+    clear: clearTournamentName,
+  } = useInput("");
+  const {
+    state: location,
+    handleChange: handleLocationChange,
+    clear: clearLocation,
+  } = useInput("");
+  const {
+    state: rounds,
+    handleChange: handleRoundsChange,
+    clear: clearRounds,
+  } = useInput("");
   const {
     select: surfaceSelect,
     handleSelectChange: handleSurfaceSelectChange,
@@ -79,7 +91,9 @@ const Home: NextPage = () => {
                     numberOfRounds: Number(rounds),
                   });
 
-                  setTournamentName("");
+                  clearTournamentName();
+                  clearLocation();
+                  clearRounds();
                 }}
               >
                 <input
@@ -87,7 +101,7 @@ const Home: NextPage = () => {
                   value={tournamentName}
                   placeholder="Tournament Name"
                   maxLength={100}
-                  onChange={(event) => setTournamentName(event.target.value)}
+                  onChange={handleTournamentNameChange}
                   className="px-4 py-2 rounded-md border-2 border-zinc-800 bg-neutral-900 focus:outline-none"
                 />
                 <input
@@ -95,7 +109,7 @@ const Home: NextPage = () => {
                   value={location}
                   placeholder="Location"
                   maxLength={100}
-                  onChange={(event) => setLocation(event.target.value)}
+                  onChange={handleLocationChange}
                   className="px-4 py-2 rounded-md border-2 border-zinc-800 bg-neutral-900 focus:outline-none"
                 />
                 <select
@@ -126,9 +140,7 @@ const Home: NextPage = () => {
                   type="number"
                   max={5}
                   value={rounds}
-                  onChange={(event) => {
-                    setRounds(event.target.value);
-                  }}
+                  onChange={handleRoundsChange}
                 />
 
                 <button
